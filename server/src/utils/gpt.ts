@@ -1,22 +1,34 @@
-import OpenAI from 'openai';
-import dotenv from "dotenv";
+import axios from 'axios';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-async function generatedText(prompt: string) {
+const HF_API_URL = 'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-  
+async function generateText(prompt: string): Promise<string> {
+  try {
+    const res = await axios.post(
+      HF_API_URL,
+      { inputs: prompt },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HUGGINGFACE_API_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000,
+      }
+    );
 
-  const res = await openai.completions.create({
-    model: "text-davinci-003",
-    prompt: "...",
-    max_tokens: 300,
-  });
-  
-  res.choices[0].text;
+    console.log("🪄 HF Response:", res.data);
+    const output = Array.isArray(res.data)
+      ? res.data[0]?.generated_text || ""
+      : res.data?.generated_text || "";
+
+    return output;
+  } catch (err: any) {
+    console.error("❌ Hugging Face Error:", err?.response?.data || err.message);
+    throw new Error("Hugging Face API request failed");
+  }
 }
 
-export {generatedText};
+export { generateText };
