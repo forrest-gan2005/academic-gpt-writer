@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.ts",
+    "start": "ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "openai": "^4.95.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/node": "^22.14.1",
     "nodemon": "^3.1.9",
