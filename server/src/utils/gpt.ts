@@ -24,7 +24,8 @@ async function generateText(prompt: string): Promise<string> {
       ? res.data[0]?.generated_text || ""
       : res.data?.generated_text || "";
 
-    return output;
+    const generatedText = output.replace(prompt, '').trim();
+    return generatedText;
   } catch (err: any) {
     console.error("❌ Hugging Face Error:", err?.response?.data || err.message);
     throw new Error("Hugging Face API request failed");
